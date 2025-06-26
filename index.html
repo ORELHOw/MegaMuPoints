@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,9 +5,9 @@
   <title>Distribuidor de Pontos MegaMu</title>
   <style>
     :root {
-      --primary: #ff6b9e;
+      --primary: #ff4d8b;
       --background: #0f0f0f;
-      --card: #1c1c1c;
+      --card: #1e1e1e;
       --text: #ffffff;
       --accent: #2e2e2e;
     }
@@ -18,46 +17,48 @@
     }
 
     body {
+      margin: 0;
+      padding: 2rem;
       background-color: var(--background);
       font-family: 'Segoe UI', sans-serif;
       color: var(--text);
-      padding: 40px;
     }
 
     h2 {
       color: var(--primary);
-      font-weight: 600;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
     }
 
     label {
-      margin-top: 20px;
+      margin-top: 1.2rem;
       display: block;
-      font-size: 14px;
-      color: #aaa;
+      font-size: 0.95rem;
+      color: #ccc;
     }
 
     select, input, button {
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
       padding: 12px 15px;
       margin-top: 5px;
       border: none;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 1rem;
       background-color: var(--card);
       color: var(--text);
-      outline: none;
     }
 
     button {
       background-color: var(--primary);
-      color: #fff;
+      margin-top: 20px;
+      font-weight: bold;
+      transition: background 0.3s;
       cursor: pointer;
-      transition: 0.3s;
     }
 
     button:hover {
-      opacity: 0.85;
+      background-color: #ff70a4;
     }
 
     .output {
@@ -65,9 +66,17 @@
       background-color: var(--accent);
       padding: 20px;
       border-radius: 16px;
-      font-size: 16px;
+      font-size: 1rem;
       white-space: pre-wrap;
       line-height: 1.6;
+    }
+
+    .build-info {
+      margin-top: 20px;
+      background-color: #292929;
+      padding: 15px;
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -75,18 +84,23 @@
   <h2>Distribuidor de Pontos - MegaMu Online</h2>
 
   <label>Classe:</label>
-  <select id="classSelect" onchange="updateSubclasses()">
-    <option value="BK">Dark Knight (BK)</option>
-    <option value="SM">Dark Wizard (SM)</option>
+  <select id="classSelect" onchange="updateSubclasses(); updateBuildInfo();">
+    <option value="BK">Dark Knight</option>
+    <option value="SM">Dark Wizard</option>
     <option value="ELF">Fairy Elf</option>
     <option value="MG">Magic Gladiator</option>
     <option value="DL">Dark Lord</option>
     <option value="SUM">Summoner</option>
     <option value="RF">Rage Fighter</option>
+    <option value="GL">Grow Lancer</option>
+    <option value="SN">Slayer</option>
+    <option value="GC">Gun Crusher</option>
+    <option value="LE">Lemuria Mage</option>
+    <option value="IL">Illusion Knight</option>
   </select>
 
   <label>Subclasse:</label>
-  <select id="subclassSelect"></select>
+  <select id="subclassSelect" onchange="updateBuildInfo()"></select>
 
   <label>Tipo de Build:</label>
   <select id="buildSelect">
@@ -94,6 +108,8 @@
     <option value="pvp">PvP</option>
     <option value="tank">Tank</option>
     <option value="suporte">Suporte</option>
+    <option value="dano_fisico">Dano Físico</option>
+    <option value="dano_magico">Dano Mágico</option>
   </select>
 
   <label>Total de Pontos:</label>
@@ -103,54 +119,49 @@
 
   <div class="output" id="resultado"></div>
 
+  <div class="build-info" id="buildInfo"></div>
+
   <script>
     const subclasses = {
-      BK: ["Blade Knight", "Blade Master"],
-      SM: ["Soul Master", "Grand Master"],
-      ELF: ["Muse Elf", "High Elf"],
-      MG: ["Magic Gladiator"],
+      BK: ["Dark Knight", "Blade Knight", "Blade Master"],
+      SM: ["Dark Wizard", "Soul Master", "Grand Master"],
+      ELF: ["Fairy Elf", "Muse Elf", "High Elf"],
+      MG: ["Magic Gladiator", "Duel Master"],
       DL: ["Dark Lord", "Lord Emperor"],
       SUM: ["Summoner", "Bloody Summoner", "Dimension Master"],
-      RF: ["Rage Fighter", "Fist Master"]
+      RF: ["Rage Fighter", "Fist Master"],
+      GL: ["Grow Lancer", "Master Lancer"],
+      SN: ["Slayer", "Royal Slayer"],
+      GC: ["Gun Crusher", "Gun Breaker"],
+      LE: ["Lemuria Mage", "Rune Mage"],
+      IL: ["Illusion Knight", "Mirage Knight"]
     };
 
-    const builds = {
+    const buildDescriptions = {
+      MG: {
+        "Magic Gladiator": "Build híbrida para dano físico ou mágico. PvE foca em STR/AGI, dano mágico usa ENE.",
+        "Duel Master": "Versão evoluída com melhor scaling. Utilizar builds específicas para PvP ou PvE."
+      },
       BK: {
-        pve: { str: 0.5, agi: 0.3, vit: 0.15, ene: 0.05 },
-        pvp: { str: 0.4, agi: 0.25, vit: 0.3, ene: 0.05 },
-        tank: { str: 0.2, agi: 0.2, vit: 0.55, ene: 0.05 }
+        "Blade Master": "Alta STR e AGI para dano e velocidade. Build PvP/Tank utiliza mais VIT.",
+        "Blade Knight": "Foco em STR/AGI para PvE, excelente para farm."
       },
       SM: {
-        pve: { str: 0.05, agi: 0.1, vit: 0.15, ene: 0.7 },
-        pvp: { str: 0.1, agi: 0.2, vit: 0.25, ene: 0.45 },
-        tank: { str: 0.1, agi: 0.1, vit: 0.5, ene: 0.3 }
-      },
-      ELF: {
-        pve: { str: 0.1, agi: 0.7, vit: 0.15, ene: 0.05 },
-        suporte: { str: 0.05, agi: 0.25, vit: 0.3, ene: 0.4 },
-        pvp: { str: 0.15, agi: 0.5, vit: 0.25, ene: 0.1 },
-        tank: { str: 0.1, agi: 0.3, vit: 0.5, ene: 0.1 }
-      },
-      MG: {
-        pve: { str: 0.4, agi: 0.35, vit: 0.2, ene: 0.05 },
-        pvp: { str: 0.3, agi: 0.3, vit: 0.3, ene: 0.1 },
-        tank: { str: 0.2, agi: 0.2, vit: 0.55, ene: 0.05 }
+        "Grand Master": "Full energia para PvM. PvP requer equilíbrio com VIT e AGI.",
+        "Soul Master": "Build mágica, base em ENE."
       },
       DL: {
-        pve: { str: 0.4, agi: 0.3, vit: 0.2, ene: 0.1 },
-        pvp: { str: 0.35, agi: 0.25, vit: 0.3, ene: 0.1 },
-        tank: { str: 0.2, agi: 0.2, vit: 0.5, ene: 0.1 }
+        "Lord Emperor": "Build física com AGI alta para velocidade, ENE pode escalar dano mágico.",
+        "Dark Lord": "Foco em STR/VIT para PvP."
       },
       SUM: {
-        pve: { str: 0.05, agi: 0.1, vit: 0.15, ene: 0.7 },
-        suporte: { str: 0.05, agi: 0.15, vit: 0.3, ene: 0.5 },
-        pvp: { str: 0.1, agi: 0.2, vit: 0.25, ene: 0.45 }
+        "Dimension Master": "Build mágica com foco em ENE e suporte. PvE depende de agilidade e energia.",
+        "Summoner": "Build básica, ideal para build mágica de farm."
       },
       RF: {
-        pve: { str: 0.5, agi: 0.2, vit: 0.25, ene: 0.05 },
-        pvp: { str: 0.4, agi: 0.2, vit: 0.35, ene: 0.05 },
-        tank: { str: 0.2, agi: 0.15, vit: 0.6, ene: 0.05 }
+        "Fist Master": "Alto dano físico. PvP com mais VIT, PvE com mais STR/AGI."
       }
+      // Adicione mais descrições se necessário...
     };
 
     function updateSubclasses() {
@@ -165,11 +176,18 @@
       });
     }
 
+    function updateBuildInfo() {
+      const classe = document.getElementById("classSelect").value;
+      const subclasse = document.getElementById("subclassSelect").value;
+      const info = buildDescriptions[classe]?.[subclasse] || "";
+      document.getElementById("buildInfo").textContent = info ? `Info: ${info}` : "";
+    }
+
     function calcular() {
       const classe = document.getElementById("classSelect").value;
       const build = document.getElementById("buildSelect").value;
       const pontos = parseInt(document.getElementById("totalPoints").value);
-      const dist = builds[classe][build];
+      const dist = builds[classe]?.[build];
 
       if (!dist) {
         document.getElementById("resultado").innerHTML = "Build não disponível para essa classe.";
@@ -181,15 +199,38 @@
       const vit = Math.floor(pontos * dist.vit);
       const ene = Math.floor(pontos * dist.ene);
 
-      const comando = `/reset auto ${str} ${agi} ${vit} ${ene}`;
-      document.getElementById("resultado").innerHTML = `Distribuição:
-STR: ${str} | AGI: ${agi} | VIT: ${vit} | ENE: ${ene}
+      const comandoReset = `/reset auto ${str} ${agi} ${vit} ${ene}`;
+      const comandoStats = `/f ${str} /a ${agi} /v ${vit} /e ${ene}`;
 
-Comando:
-${comando}`;
+      document.getElementById("resultado").innerHTML = `Distribuição:\nSTR: ${str} | AGI: ${agi} | VIT: ${vit} | ENE: ${ene}\n\nComando Reset:\n${comandoReset}\n\nComando Individual:\n${comandoStats}`;
     }
 
-    window.onload = updateSubclasses;
+    const builds = {
+      MG: {
+        pve: { str: 0.4, agi: 0.35, vit: 0.2, ene: 0.05 },
+        dano_fisico: { str: 0.45, agi: 0.4, vit: 0.1, ene: 0.05 },
+        dano_magico: { str: 0.2, agi: 0.25, vit: 0.2, ene: 0.35 },
+        pvp: { str: 0.3, agi: 0.3, vit: 0.3, ene: 0.1 },
+        tank: { str: 0.2, agi: 0.2, vit: 0.55, ene: 0.05 }
+      },
+      BK: {
+        pve: { str: 0.5, agi: 0.3, vit: 0.15, ene: 0.05 },
+        dano_fisico: { str: 0.6, agi: 0.25, vit: 0.1, ene: 0.05 },
+        pvp: { str: 0.4, agi: 0.25, vit: 0.3, ene: 0.05 },
+        tank: { str: 0.2, agi: 0.2, vit: 0.55, ene: 0.05 }
+      },
+      SM: {
+        pve: { str: 0.05, agi: 0.1, vit: 0.15, ene: 0.7 },
+        dano_magico: { str: 0.05, agi: 0.1, vit: 0.05, ene: 0.8 },
+        pvp: { str: 0.1, agi: 0.2, vit: 0.25, ene: 0.45 },
+        tank: { str: 0.1, agi: 0.1, vit: 0.5, ene: 0.3 }
+      }
+    };
+
+    window.onload = () => {
+      updateSubclasses();
+      updateBuildInfo();
+    };
   </script>
 </body>
 </html>
