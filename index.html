@@ -232,5 +232,40 @@
       updateBuildInfo();
     };
   </script>
+
+  <h2 style="margin-top: 60px;">Estimativa de Pontos por Reset</h2>
+
+  <label>Resets atuais:</label>
+  <input type="number" id="resetsInput" placeholder="Ex: 45">
+
+  <label>Pontos totais atuais:</label>
+  <input type="number" id="totalCurrentPointsInput" placeholder="Ex: 16130">
+
+  <button onclick="calcularProximoReset()">Calcular Próximo Reset</button>
+
+  <div class="output" id="resultadoReset"></div>
+
+  <script>
+    function calcularProximoReset() {
+      const resets = parseInt(document.getElementById("resetsInput").value);
+      const totalPontos = parseInt(document.getElementById("totalCurrentPointsInput").value);
+      const saida = document.getElementById("resultadoReset");
+
+      if (isNaN(resets) || isNaN(totalPontos) || resets <= 0) {
+        saida.innerHTML = "⚠️ Preencha corretamente os valores de resets e pontos atuais.";
+        return;
+      }
+
+      const media = totalPontos / resets;
+      const proximoReset = media;
+      const totalAposProximo = totalPontos + proximoReset;
+
+      saida.innerHTML =
+        `📊 Média por reset: <strong>${media.toFixed(2)}</strong> pontos<br>` +
+        `🔮 Estimativa no próximo reset (reset ${resets + 1}): <strong>${proximoReset.toFixed(0)}</strong> pontos<br>` +
+        `📈 Total acumulado estimado: <strong>${totalAposProximo.toFixed(0)}</strong> pontos`;
+    }
+  </script>
 </body>
 </html>
+
