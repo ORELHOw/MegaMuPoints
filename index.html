@@ -1,271 +1,195 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Distribuidor de Pontos MegaMu</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MegaMu Reset Tool - Duel Master</title>
   <style>
-    :root {
-      --primary: #ff4d8b;
-      --background: #0f0f0f;
-      --card: #1e1e1e;
-      --text: #ffffff;
-      --accent: #2e2e2e;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
     body {
-      margin: 0;
-      padding: 2rem;
-      background-color: var(--background);
-      font-family: 'Segoe UI', sans-serif;
-      color: var(--text);
+      font-family: 'MedievalSharp', cursive;
+      background: linear-gradient(to bottom, #0a0a0a, #1f1f1f);
+      color: #d4af37;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 540px;
+      margin: auto;
+      background: #141414;
+      border: 2px solid #d4af37;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 0 25px #d4af3766;
     }
 
     h2 {
-      color: var(--primary);
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
+      text-align: center;
+      color: #ffd700;
+      margin-bottom: 20px;
     }
 
     label {
-      margin-top: 1.2rem;
-      display: block;
-      font-size: 0.95rem;
-      color: #ccc;
+      font-size: 16px;
     }
 
-    select, input, button {
+    input {
       width: 100%;
-      max-width: 500px;
-      padding: 12px 15px;
-      margin-top: 5px;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      background-color: var(--card);
-      color: var(--text);
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #555;
+      background-color: #222;
+      color: #ffd700;
+      font-size: 16px;
     }
 
     button {
-      background-color: var(--primary);
-      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      background: linear-gradient(to right, #444, #d4af37);
+      color: #fff;
+      border: none;
+      font-size: 16px;
       font-weight: bold;
-      transition: background 0.3s;
       cursor: pointer;
+      transition: 0.3s;
     }
 
     button:hover {
-      background-color: #ff70a4;
+      background: linear-gradient(to right, #d4af37, #444);
+      box-shadow: 0 0 10px #d4af37;
     }
 
     .output {
-      margin-top: 30px;
-      background-color: var(--accent);
-      padding: 20px;
-      border-radius: 16px;
-      font-size: 1rem;
-      white-space: pre-wrap;
-      line-height: 1.6;
+      margin-top: 20px;
+      background: #1c1c1c;
+      border: 1px solid #333;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
     }
 
-    .build-info {
-      margin-top: 20px;
-      background-color: #292929;
-      padding: 15px;
-      border-left: 5px solid var(--primary);
-      border-radius: 10px;
+    .command-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0;
+      background: #222;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    .command-line span {
+      flex: 1;
+      color: #d4af37;
+    }
+
+    .copy-btn {
+      margin-left: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+      background: #444;
+      color: #ffd700;
+      border: 1px solid #d4af37;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    hr {
+      margin-top: 30px;
+      border-color: #333;
     }
   </style>
 </head>
 <body>
-  <h2>Distribuidor de Pontos - MegaMu Online</h2>
+  <div class="container">
+    <h2>Distribuição Duel Master - MegaMu</h2>
 
-  <label>Classe:</label>
-  <select id="classSelect" onchange="updateSubclasses(); updateBuildInfo();">
-    <option value="BK">Dark Knight</option>
-    <option value="SM">Dark Wizard</option>
-    <option value="ELF">Fairy Elf</option>
-    <option value="MG">Magic Gladiator</option>
-    <option value="DL">Dark Lord</option>
-    <option value="SUM">Summoner</option>
-    <option value="RF">Rage Fighter</option>
-    <option value="GL">Grow Lancer</option>
-    <option value="SN">Slayer</option>
-    <option value="GC">Gun Crusher</option>
-    <option value="LE">Lemuria Mage</option>
-    <option value="IL">Illusion Knight</option>
-  </select>
+    <label for="pontos">Pontos disponíveis:</label>
+    <input type="number" id="pontos" placeholder="Ex: 16130" />
 
-  <label>Subclasse:</label>
-  <select id="subclassSelect" onchange="updateBuildInfo()"></select>
+    <button onclick="calcularDistribuicao()">Gerar Comando Atual</button>
 
-  <label>Tipo de Build:</label>
-  <select id="buildSelect">
-    <option value="pve">PvE DPS</option>
-    <option value="pvp">PvP</option>
-    <option value="tank">Tank</option>
-    <option value="suporte">Suporte</option>
-    <option value="dano_fisico">Dano Físico</option>
-    <option value="dano_magico">Dano Mágico</option>
-  </select>
+    <div class="output" id="resultadoAtual"></div>
 
-  <label>Total de Pontos:</label>
-  <input type="number" id="totalPoints" value="17006">
+    <hr />
 
-  <button onclick="calcular()">Calcular</button>
+    <label for="resetAtual">Resets atuais:</label>
+    <input type="number" id="resetAtual" placeholder="Ex: 45" />
 
-  <div class="output" id="resultado"></div>
+    <label for="pontosAtual">Pontos recebidos no último reset:</label>
+    <input type="number" id="pontosAtual" placeholder="Ex: 16130" />
 
-  <div class="build-info" id="buildInfo"></div>
+    <button onclick="calcularProximoReset()">Estimar Próximo Reset</button>
+
+    <div class="output" id="resultadoProximo"></div>
+  </div>
 
   <script>
-    const subclasses = {
-      BK: ["Dark Knight", "Blade Knight", "Blade Master"],
-      SM: ["Dark Wizard", "Soul Master", "Grand Master"],
-      ELF: ["Fairy Elf", "Muse Elf", "High Elf"],
-      MG: ["Magic Gladiator", "Duel Master"],
-      DL: ["Dark Lord", "Lord Emperor"],
-      SUM: ["Summoner", "Bloody Summoner", "Dimension Master"],
-      RF: ["Rage Fighter", "Fist Master"],
-      GL: ["Grow Lancer", "Master Lancer"],
-      SN: ["Slayer", "Royal Slayer"],
-      GC: ["Gun Crusher", "Gun Breaker"],
-      LE: ["Lemuria Mage", "Rune Mage"],
-      IL: ["Illusion Knight", "Mirage Knight"]
-    };
+    function gerarLinhasComando(f, a, e, v) {
+      return `
+        <div class="command-line"><span>/f ${f}</span><button class="copy-btn" onclick="copiarTexto('/f ${f}')">Copiar</button></div>
+        <div class="command-line"><span>/a ${a}</span><button class="copy-btn" onclick="copiarTexto('/a ${a}')">Copiar</button></div>
+        <div class="command-line"><span>/e ${e}</span><button class="copy-btn" onclick="copiarTexto('/e ${e}')">Copiar</button></div>
+        <div class="command-line"><span>/v ${v}</span><button class="copy-btn" onclick="copiarTexto('/v ${v}')">Copiar</button></div>
+      `;
+    }
 
-    const buildDescriptions = {
-      MG: {
-        "Magic Gladiator": "Build híbrida para dano físico ou mágico. PvE foca em STR/AGI, dano mágico usa ENE.",
-        "Duel Master": "Versão evoluída com melhor scaling. Utilizar builds específicas para PvP ou PvE."
-      },
-      BK: {
-        "Blade Master": "Alta STR e AGI para dano e velocidade. Build PvP/Tank utiliza mais VIT.",
-        "Blade Knight": "Foco em STR/AGI para PvE, excelente para farm."
-      },
-      SM: {
-        "Grand Master": "Full energia para PvM. PvP requer equilíbrio com VIT e AGI.",
-        "Soul Master": "Build mágica, base em ENE."
-      },
-      DL: {
-        "Lord Emperor": "Build física com AGI alta para velocidade, ENE pode escalar dano mágico.",
-        "Dark Lord": "Foco em STR/VIT para PvP."
-      },
-      SUM: {
-        "Dimension Master": "Build mágica com foco em ENE e suporte. PvE depende de agilidade e energia.",
-        "Summoner": "Build básica, ideal para build mágica de farm."
-      },
-      RF: {
-        "Fist Master": "Alto dano físico. PvP com mais VIT, PvE com mais STR/AGI."
-      }
-      // Adicione mais descrições se necessário...
-    };
-
-    function updateSubclasses() {
-      const classKey = document.getElementById('classSelect').value;
-      const subSelect = document.getElementById('subclassSelect');
-      subSelect.innerHTML = "";
-      subclasses[classKey].forEach(sub => {
-        const opt = document.createElement('option');
-        opt.value = sub;
-        opt.textContent = sub;
-        subSelect.appendChild(opt);
+    function copiarTexto(texto) {
+      navigator.clipboard.writeText(texto).then(() => {
+        alert("Comando copiado: " + texto);
       });
     }
 
-    function updateBuildInfo() {
-      const classe = document.getElementById("classSelect").value;
-      const subclasse = document.getElementById("subclassSelect").value;
-      const info = buildDescriptions[classe]?.[subclasse] || "";
-      document.getElementById("buildInfo").textContent = info ? `Info: ${info}` : "";
-    }
-
-    function calcular() {
-      const classe = document.getElementById("classSelect").value;
-      const build = document.getElementById("buildSelect").value;
-      const pontos = parseInt(document.getElementById("totalPoints").value);
-      const dist = builds[classe]?.[build];
-
-      if (!dist) {
-        document.getElementById("resultado").innerHTML = "Build não disponível para essa classe.";
+    function calcularDistribuicao() {
+      const pontos = parseInt(document.getElementById("pontos").value);
+      if (isNaN(pontos) || pontos <= 0) {
+        alert("Informe uma quantidade válida de pontos.");
         return;
       }
 
-      const str = Math.floor(pontos * dist.str);
-      const agi = Math.floor(pontos * dist.agi);
-      const vit = Math.floor(pontos * dist.vit);
-      const ene = Math.floor(pontos * dist.ene);
+      const f = Math.floor(pontos * 0.70);
+      const a = Math.floor(pontos * 0.10);
+      const e = Math.floor(pontos * 0.19);
+      const v = pontos - f - a - e;
 
-      const comandoReset = `/reset auto ${str} ${agi} ${vit} ${ene}`;
-      const comandoStats = `/f ${str} /a ${agi} /v ${vit} /e ${ene}`;
-
-      document.getElementById("resultado").innerHTML = `Distribuição:\nSTR: ${str} | AGI: ${agi} | VIT: ${vit} | ENE: ${ene}\n\nComando Reset:\n${comandoReset}\n\nComando Individual:\n${comandoStats}`;
+      document.getElementById("resultadoAtual").innerHTML =
+        `<b>🔹 Comando Geral:</b>
+        <div class="command-line"><span>/reset auto f ${f} a ${a} e ${e} v ${v}</span>
+        <button class="copy-btn" onclick="copiarTexto('/reset auto f ' + ${f} + ' a ' + ${a} + ' e ' + ${e} + ' v ' + ${v})">Copiar</button></div>
+        <b>🔹 Comandos Individuais:</b>` + `<div class="command-line"><span>/reset auto f ${f} a ${a} e ${e} v ${v}</span>
+        <button class="copy-btn" onclick="copiarTexto('/reset auto f ' + ${f} + ' a ' + ${a} + ' e ' + ${e} + ' v ' + ${v})">Copiar</button></div>` + gerarLinhasComando(f, a, e, v);
     }
 
-    const builds = {
-      MG: {
-        pve: { str: 0.4, agi: 0.35, vit: 0.2, ene: 0.05 },
-        dano_fisico: { str: 0.45, agi: 0.4, vit: 0.1, ene: 0.05 },
-        dano_magico: { str: 0.2, agi: 0.25, vit: 0.2, ene: 0.35 },
-        pvp: { str: 0.3, agi: 0.3, vit: 0.3, ene: 0.1 },
-        tank: { str: 0.2, agi: 0.2, vit: 0.55, ene: 0.05 }
-      },
-      BK: {
-        pve: { str: 0.5, agi: 0.3, vit: 0.15, ene: 0.05 },
-        dano_fisico: { str: 0.6, agi: 0.25, vit: 0.1, ene: 0.05 },
-        pvp: { str: 0.4, agi: 0.25, vit: 0.3, ene: 0.05 },
-        tank: { str: 0.2, agi: 0.2, vit: 0.55, ene: 0.05 }
-      },
-      SM: {
-        pve: { str: 0.05, agi: 0.1, vit: 0.15, ene: 0.7 },
-        dano_magico: { str: 0.05, agi: 0.1, vit: 0.05, ene: 0.8 },
-        pvp: { str: 0.1, agi: 0.2, vit: 0.25, ene: 0.45 },
-        tank: { str: 0.1, agi: 0.1, vit: 0.5, ene: 0.3 }
-      }
-    };
-
-    window.onload = () => {
-      updateSubclasses();
-      updateBuildInfo();
-    };
-  </script>
-
-  <h2 style="margin-top: 60px;">Estimativa de Pontos por Reset</h2>
-
-  <label>Resets atuais:</label>
-  <input type="number" id="resetsInput" placeholder="Ex: 45">
-
-  <label>Pontos totais atuais:</label>
-  <input type="number" id="totalCurrentPointsInput" placeholder="Ex: 16130">
-
-  <button onclick="calcularProximoReset()">Calcular Próximo Reset</button>
-
-  <div class="output" id="resultadoReset"></div>
-
-  <script>
     function calcularProximoReset() {
-      const resets = parseInt(document.getElementById("resetsInput").value);
-      const totalPontos = parseInt(document.getElementById("totalCurrentPointsInput").value);
-      const saida = document.getElementById("resultadoReset");
+      const resetAtual = parseInt(document.getElementById("resetAtual").value);
+      const pontosAtual = parseInt(document.getElementById("pontosAtual").value);
 
-      if (isNaN(resets) || isNaN(totalPontos) || resets <= 0) {
-        saida.innerHTML = "⚠️ Preencha corretamente os valores de resets e pontos atuais.";
+      if (isNaN(resetAtual) || isNaN(pontosAtual) || resetAtual <= 0 || pontosAtual <= 0) {
+        alert("Preencha os dados corretamente.");
         return;
       }
 
-      const media = totalPontos / resets;
-      const proximoReset = media;
-      const totalAposProximo = totalPontos + proximoReset;
+      const proximoReset = resetAtual + 1;
+      const ganhoPorReset = Math.floor(pontosAtual / resetAtual);
+      const pontosProximos = ganhoPorReset * proximoReset;
 
-      saida.innerHTML =
-        `📊 Média por reset: <strong>${media.toFixed(2)}</strong> pontos<br>` +
-        `🔮 Estimativa no próximo reset (reset ${resets + 1}): <strong>${proximoReset.toFixed(0)}</strong> pontos<br>` +
-        `📈 Total acumulado estimado: <strong>${totalAposProximo.toFixed(0)}</strong> pontos`;
+      const f = Math.floor(pontosProximos * 0.70);
+      const a = Math.floor(pontosProximos * 0.10);
+      const e = Math.floor(pontosProximos * 0.19);
+      const v = pontosProximos - f - a - e;
+
+      document.getElementById("resultadoProximo").innerHTML =
+        `<b>🔮 Estimativa Reset ${proximoReset}:</b><br>Pontos: ${pontosProximos}` +
+        `<div class="command-line"><span>/reset auto f ${f} a ${a} e ${e} v ${v}</span>
+        <button class="copy-btn" onclick="copiarTexto('/reset auto f ' + ${f} + ' a ' + ${a} + ' e ' + ${e} + ' v ' + ${v})">Copiar</button></div>` + gerarLinhasComando(f, a, e, v);
     }
   </script>
 </body>
 </html>
-
