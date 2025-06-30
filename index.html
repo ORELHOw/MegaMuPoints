@@ -6,106 +6,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MegaMu Reset Tool - Duel Master</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
-    body {
-      font-family: 'MedievalSharp', cursive;
-      background: linear-gradient(to bottom, #0a0a0a, #1f1f1f);
-      color: #d4af37;
-      padding: 20px;
-    }
+  body {
+    font-family: 'MedievalSharp', cursive;
+    background: #080b12;
+    color: #e7c66f;
+    margin: 0;
+    padding: 0;
+    background-image: url('e07af446-b666-4089-83dc-a9473b6f5b41.png');
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+  }
 
-    .container {
-      max-width: 540px;
-      margin: auto;
-      background: #141414;
-      border: 2px solid #d4af37;
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 0 25px #d4af3766;
-    }
+  .container {
+    max-width: 600px;
+    margin: 100px auto;
+    background: rgba(10, 10, 10, 0.95);
+    border: 2px solid #d4af37;
+    border-radius: 14px;
+    box-shadow: 0 0 25px #d4af3777;
+    padding: 30px;
+  }
 
-    h2 {
-      text-align: center;
-      color: #ffd700;
-      margin-bottom: 20px;
-    }
+  h2 {
+    text-align: center;
+    color: #f1c94c;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 6px #d4af37;
+  }
 
-    label {
-      font-size: 16px;
-    }
+  label {
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+  }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: 1px solid #555;
-      background-color: #222;
-      color: #ffd700;
-      font-size: 16px;
-    }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #888;
+    background-color: #1c1c1c;
+    color: #ffe38d;
+    font-size: 16px;
+  }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 8px;
-      background: linear-gradient(to right, #444, #d4af37);
-      color: #fff;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #333, #d4af37);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+  }
 
-    button:hover {
-      background: linear-gradient(to right, #d4af37, #444);
-      box-shadow: 0 0 10px #d4af37;
-    }
+  button:hover {
+    background: linear-gradient(to right, #d4af37, #444);
+    box-shadow: 0 0 10px #d4af37;
+  }
 
-    .output {
-      margin-top: 20px;
-      background: #1c1c1c;
-      border: 1px solid #333;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 15px;
-    }
+  .output {
+    margin-top: 20px;
+    background: #111;
+    border: 1px solid #555;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+  }
 
-    .command-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 6px 0;
-      background: #222;
-      padding: 8px 10px;
-      border-radius: 6px;
-    }
+  .command-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 6px 0;
+    background: #222;
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
 
-    .command-line span {
-      flex: 1;
-      color: #d4af37;
-    }
+  .command-line span {
+    flex: 1;
+    color: #ffe38d;
+  }
 
-    .copy-btn {
-      margin-left: 10px;
-      padding: 6px 12px;
-      font-size: 14px;
-      background: #444;
-      color: #ffd700;
-      border: 1px solid #d4af37;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+  .copy-btn {
+    margin-left: 10px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background: #333;
+    color: #f1c94c;
+    border: 1px solid #d4af37;
+    border-radius: 6px;
+    cursor: pointer;
+  }
 
-    hr {
-      margin-top: 30px;
-      border-color: #333;
-    }
-  </style>
+  .copy-btn:hover {
+    background: #555;
+  }
+
+  hr {
+    margin-top: 30px;
+    border-color: #333;
+  }
+</style>
 </head>
 <body>
   <div class="container">
@@ -126,12 +139,46 @@
     <label for="pontosAtual">Pontos recebidos no último reset:</label>
     <input type="number" id="pontosAtual" placeholder="Ex: 16130" />
 
-    <button onclick="calcularProximoReset()">Estimar Próximo Reset</button>
+    <button onclick="processarResetERecomendacao()">Estimar Próximo Reset</button>
 
     <div class="output" id="resultadoProximo"></div>
+
+    <div class="output" id="recomendacaoSpot"></div>
   </div>
 
   <script>
+  function calcularProximoReset() {
+  const resetAtual = parseInt(document.getElementById("resetAtual").value);
+  const pontosAtual = parseInt(document.getElementById("pontosAtual").value);
+
+  if (isNaN(resetAtual) || isNaN(pontosAtual) || resetAtual <= 0 || pontosAtual <= 0) {
+    alert("Preencha os dados corretamente.");
+    return;
+  }
+
+  const proximoReset = resetAtual + 1;
+  const ganhoPorReset = Math.floor(pontosAtual / resetAtual);
+  const pontosProximos = ganhoPorReset * proximoReset;
+
+  const f = Math.floor(pontosProximos * 0.70);
+  const a = Math.floor(pontosProximos * 0.10);
+  const e = Math.floor(pontosProximos * 0.19);
+  const v = pontosProximos - f - a - e;
+
+  const comandoGeral = `/reset auto f ${f} a ${a} e ${e} v ${v}`;
+  const comandosIndividuais = gerarLinhasComando(f, a, e, v);
+
+  document.getElementById("resultadoProximo").innerHTML = `
+    <b>🔮 Estimativa Reset ${proximoReset}:</b><br>
+    Pontos estimados: ${pontosProximos}<br><br>
+    <div class="command-line"><span>${comandoGeral}</span><button class="copy-btn" onclick="copiarTexto('${comandoGeral}')">Copiar</button></div>
+    <b>🔹 Comandos Individuais:</b><br>
+    ${comandosIndividuais}
+  `;
+
+  mostrarSpot(resetAtual);
+}
+
     function gerarLinhasComando(f, a, e, v) {
       return `
         <div class="command-line"><span>/f ${f}</span><button class="copy-btn" onclick="copiarTexto('/f ${f}')">Copiar</button></div>
@@ -166,30 +213,62 @@
         <b>🔹 Comandos Individuais:</b>` + `<div class="command-line"><span>/reset auto f ${f} a ${a} e ${e} v ${v}</span>
         <button class="copy-btn" onclick="copiarTexto('/reset auto f ' + ${f} + ' a ' + ${a} + ' e ' + ${e} + ' v ' + ${v})">Copiar</button></div>` + gerarLinhasComando(f, a, e, v);
     }
+function processarResetERecomendacao() {
+  const resetAtual = parseInt(document.getElementById("resetAtual").value);
+  const pontosAtual = parseInt(document.getElementById("pontosAtual").value);
 
-    function calcularProximoReset() {
-      const resetAtual = parseInt(document.getElementById("resetAtual").value);
-      const pontosAtual = parseInt(document.getElementById("pontosAtual").value);
+  if (isNaN(resetAtual) || isNaN(pontosAtual) || resetAtual <= 0 || pontosAtual <= 0) {
+    alert("Preencha os dados corretamente.");
+    return;
+  }
 
-      if (isNaN(resetAtual) || isNaN(pontosAtual) || resetAtual <= 0 || pontosAtual <= 0) {
-        alert("Preencha os dados corretamente.");
-        return;
-      }
+  const proximoReset = resetAtual + 1;
+  const ganhoPorReset = Math.floor(pontosAtual / resetAtual);
+  const pontosProximos = ganhoPorReset * proximoReset;
 
-      const proximoReset = resetAtual + 1;
-      const ganhoPorReset = Math.floor(pontosAtual / resetAtual);
-      const pontosProximos = ganhoPorReset * proximoReset;
+  const f = Math.floor(pontosProximos * 0.70);
+  const a = Math.floor(pontosProximos * 0.10);
+  const e = Math.floor(pontosProximos * 0.19);
+  const v = pontosProximos - f - a - e;
 
-      const f = Math.floor(pontosProximos * 0.70);
-      const a = Math.floor(pontosProximos * 0.10);
-      const e = Math.floor(pontosProximos * 0.19);
-      const v = pontosProximos - f - a - e;
+  const comando = `/reset auto f ${f} a ${a} e ${e} v ${v}`;
+  const resultadoHtml = `
+    <b>🔮 Estimativa Reset ${proximoReset}:</b><br>Pontos: ${pontosProximos}
+    <div class="command-line">
+      <span>${comando}</span>
+      <button class="copy-btn" onclick="copiarTexto('${comando}')">Copiar</button>
+    </div>
+    ${gerarLinhasComando(f, a, e, v)}
+  `;
 
-      document.getElementById("resultadoProximo").innerHTML =
-        `<b>🔮 Estimativa Reset ${proximoReset}:</b><br>Pontos: ${pontosProximos}` +
-        `<div class="command-line"><span>/reset auto f ${f} a ${a} e ${e} v ${v}</span>
-        <button class="copy-btn" onclick="copiarTexto('/reset auto f ' + ${f} + ' a ' + ${a} + ' e ' + ${e} + ' v ' + ${v})">Copiar</button></div>` + gerarLinhasComando(f, a, e, v);
-    }
+  document.getElementById("resultadoProximo").innerHTML = resultadoHtml;
+
+  let spot = "";
+  switch (true) {
+    case resetAtual >= 90:
+      spot = "🌍 Devil Square 6/7 - Use /ds com Bless of Light";
+      break;
+    case resetAtual >= 80:
+      spot = "🌍 Karutan 2 (50,200 ou 180,180) - EXP altíssima";
+      break;
+    case resetAtual >= 70:
+      spot = "🌍 Kanturu 2 (141,97 ou 170,140) - Ideal com set +DD e HP extra";
+      break;
+    case resetAtual >= 60:
+      spot = "🌍 Aida 2 (23,186 ou 129,185) - Excelente EXP com mobs agrupados";
+      break;
+    case resetAtual >= 50:
+      spot = "🌍 Arena (47,57 ou 66,83) - Spots densos e fáceis de tankar";
+      break;
+    default:
+      spot = "⚠️ Ainda abaixo do nível ideal para essas rotas de farm.";
+  }
+
+  document.getElementById("recomendacaoSpot").innerHTML = `<b>📍 Melhor local de UP:</b><br>${spot}`;
+}
+
+
+
   </script>
 </body>
 </html>
